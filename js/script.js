@@ -1,26 +1,14 @@
 "use strict";
 
-// Where is the sausage dog activity
-
 // Canvas dimensions
 let canvasSize = {
   w: 1000,
   h: 800
 }
+// add ball
+let ball = new Ball();
 
-// ball object
-let ball = {
-  x: canvasSize.w / 2,
-  y: canvasSize.h / 2,
-  vx: 2,
-  vy: 4,
-  d: 100,
-  color: {
-    r: 0,
-    b: 0,
-    g: 200
-  }
-};
+let gameStart = false;
 
 // add both paddles
 let playerPaddle = {
@@ -44,7 +32,7 @@ let score = {
   x: canvasSize.w / 2,
   y: canvasSize.h / 2 + 350,
   size: 50,
-  color: 100,
+  color: 200,
 };
 
 // background colors
@@ -57,43 +45,19 @@ let bg = {
 function setup() {
   // create canvas at the middle of screen
   createCanvas(canvasSize.w, canvasSize.h);
-  // ball.ballSetup();
+
+  setTimeout(() => {
+    gameStart = true;
+  }, 3000);
 };
 
 // update all the functions and methods of script and objects
 function draw() {
   background(bg.r, bg.g, bg.b);
-  paddles.update();
-  points()
-  // create ball
-  push();
-  noStroke();
-  fill(ball.color.r, ball.color.g, ball.color.b);
-  ellipse(ball.x, ball.y, ball.d);
-  pop();
-
-  // ball is moving
-  ball.x += ball.vx;
-  ball.y += ball.vy;
-  // if ball bounces on the walls, inverse speed and change bg color
-  // if ball hits computer side, add one point to computer
-  if (ball.x > width - ball.d / 2) {
-    ball.vx = -ball.vx;
-    randomColors();
-    score.computerScore += 1;
-  }
-  else if (ball.x < ball.d / 2) {
-    ball.vx = -ball.vx;
-    randomColors();
-    score.playerScore += 1;
-
-  };
-  if (ball.y > height - ball.d / 2 || ball.y < ball.d / 2) {
-    ball.vy = -ball.vy;
-    randomColors();
-  };
+  paddles.update(ball);
+  points();
+  ball.update();
 };
-
 
 // generate random colors for the background
 function randomColors() {
@@ -106,7 +70,7 @@ function randomColors() {
 function points() {
   push();
   fill(score.color);
-  textFont('Helvetica')
+  textFont('Helvetica');
   textSize(score.size);
   textAlign(CENTER, CENTER);
   text(score.playerScore + ' - ' + score.computerScore, score.x, score.y);
